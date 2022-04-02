@@ -1,0 +1,817 @@
+<html>
+	<body>
+
+	<h1>Side Scroller Starter Code</h1>
+
+	<canvas id="myCanvas" width="1500" height="800" style="border:solid 1px #000;"></canvas>
+	<div> Player 1: Q = UP and A = Down<br/> Player 2: Up Arrow = UP and Down Arrow = DOWN</div>
+ 
+ 	<script type="text/javascript" src="inputs.js"></script>
+43	<script type="text/javascript">
+		
+		// Get Canvas
+		var c = document.getElementById('myCanvas');
+		var ctx = c.getContext("2d");
+
+		var screenWidth = 1500;
+		var screenHeight = 800;
+
+		var bgSound = new Audio('gameSoundBG.mp3');
+		bgSound.loop = true;
+		bgSound.volume = 0.5;
+		bgSound.play();
+
+		var jumpSound = new Audio('mario_jump.wav');
+		jumpSound.volume = 0.5;
+
+
+		//------------------------------------------
+		// Create Our Objects
+		//------------------------------------------
+		
+		//--------------------------
+		// Arrays
+		//--------------------------
+		var level1Map =  
+			[ 
+				[8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8,8],
+				[30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,2,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,2,2,2,2,0,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,2,0,0,0,0,7,7,1,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,0,0,0,0,7,1,1,1,1,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,0,0,0,7,1,45,45,45,1,1,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,4,4,4,4,4,4,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,0,0,7,1,1,45,45,45,1,1,0,0,7,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30],
+				[30,0,0,0,0,7,7,1,1,1,45,45,45,1,1,0,0,1,7,7,7,7,7,0,0,0,7,7,0,0,7,0,0,7,7,7,7,7,7,7,0,7,0,0,7,7,7,7,7,7],
+				[30,0,0,0,7,1,1,1,1,1,45,45,45,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,7,1,1,1,1,1,35],
+				[35,0,7,0,0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,1,7,1,1,1,1,1,1,35],
+				[35,7,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,1,1,1,1,1,1,1,35],
+				[35,1,1,7,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,1,0,0,1,1,1,1,0,0,0,0,1,1,0,1,1,1,1,1,1,1,1,35],
+				[35,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,35],
+				[35,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,35],
+				[35,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,35],
+				[35,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,1,1,1,1,35],
+				[9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9,9],
+			
+			];
+
+
+		var level2Map =  
+		[ 
+
+				[30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,30,],
+
+				[30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,30,],
+
+				[30,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,30,],
+				[30,0,0,0,0,2,2,2,2,2,2,0,0,0,0,0,0,2,0,0,0,2,2,2,0,0,0,0,0,0,0,0,0,0,0,2,2,2,2,0,0,0,0,0,0,30,],
+				[30,0,0,0,0,2,2,2,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,],
+				[30,0,0,0,0,2,0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,],
+				[30,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,],
+				[30,0,0,0,0,0,0,0,1,1,1,1,1,1,1,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,],
+				[30,0,0,0,0,0,0,1,1,1,1,1,1,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,30,],
+				[30,1,0,1,0,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,0,0,0,1,1,0,0,1,0,0,1,1,0,1,1,1,1,0,1,0,0,1,30,],
+				[30,0,0,1,0,0,0,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,0,0,1,1,],
+				[1,0,0,0,0,0,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,0,1,1,1,0,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,],
+				[1,1,0,0,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,0,0,1,1,1,1,1,1,],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,1,1,1,1,1,1,0,0,0,1,1,0,0,1,0,0,1,0,0,0,0,1,1,0,1,1,1,1,],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,1,1,1,1,0,0,1,1,1,1,0,0,0,0,1,1,1,1,1,1,1,1,0,1,1,1,1,],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,0,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,],
+				[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0,0,0,0,1,1,1,1,1,1,1,0,1,1,1,1,],
+			
+			];
+	
+
+			
+		var level3Map =  
+			[
+				[6,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,1,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,9,1,1,1,1,1,1,9,1,1,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,9,1,1,1,1,1,1,9,1,1,1,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,1,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,9,1,1,1,1,1,1,9,1,1,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,1,1,1,9,1,1,1,1,9,1,1,1,1,9,1,1,1,1,1,9,1,1,1,1,1,1,9,1,1,1,6],
+			];
+		var level4Map =
+			[
+				[6,0,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,20,0,0,0,0,0,0,0,0,0,20,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,20,20,20,20,20,0,0,0,0,0,20,20,20,20,20,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,6],
+
+			];
+		var level5Map =  
+			[
+				[6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,6],
+				[6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6,6]
+			];
+
+		var level = new Level(level1Map);
+
+		var character = new MainCharacter(20, 20, 40, 55, 100);
+		//var coin = new Coin(400, 650, 20, 20);
+ 
+		//var coins = new Array();
+
+		
+		/*var enemy = new Array();
+
+		
+		enemy.push(new Enemy(1500, 600, 30, 30));
+		enemy.push(new Enemy(1000, 200, 30, 30));
+		enemy.push(new Enemy(190, 600, 30, 30));
+		enemy.push(new Enemy(250, 600, 30, 30));
+		*/
+
+		
+			
+ 		
+		//--------------------------------
+		// Main Loop of the Game
+		//--------------------------------
+		function gameLoop()
+		{	
+			// Update
+			level.Update();
+			character.Update();
+
+			// Draw
+			clearScreen();
+
+			level.Draw();
+			character.Draw();
+
+
+		}
+
+		//--------------------------------------------------
+		// Classes
+		//--------------------------------------------------
+		function Coin(x, y, width, height)
+		{
+			this.x = x;
+			this.y = y;
+			this.height = height;
+			this.width = width;
+			this.disabled = false;
+			this.objType = 'coin';
+		}
+
+		Coin.prototype.Update = function()
+		{
+
+		}
+
+		Coin.prototype.Draw = function()
+		{		
+			if(!this.disabled)
+			{
+				drawRectangle(this.x - level.viewPortX, this.y - level.viewPortY, this.width, this.height, 'yellow')
+			}
+		}	
+		
+
+		function Enemy(x, y, width, height, speed, health)
+		{
+			
+			this.x = x;
+			this.y = y;
+			this.height = height;
+			this.width = width;
+			this.health = health;
+			this.maxHealth = health;
+			this.speed = speed || 4;
+			this.fallSpeed = 6;
+			this.state = 0;
+			this.originalJumpY = 0;
+			this.disabled = false;
+			//this.range = range;
+			this.direction = -1;
+			this.startX = x;
+			this.speed = speed;
+			
+		}
+
+
+		Enemy.prototype.Update = function()
+		{
+			/*if(this.direction > 0) // Moving Right
+			{
+				if(this.x < this.startX + this.range)
+				{
+					this.x += this.speed;
+				}
+				else
+				{
+					this.direction *= -1;
+				}
+			}
+			else  // Moving Left
+ 			{
+			
+				if(this.x > this.startX - this.range)
+				{
+					this.x -= this.speed;
+				}
+				else
+				{
+					this.direction *= -1;
+				}
+			}
+			this.rightSprite.Update();
+			this.leftSprite.Update();*/
+		}
+
+		Enemy.prototype.Draw = function()
+		{		
+			drawRectangle(this.x - level.viewPortX, this.y - level.viewPortY, this.width, this.height, 'red');
+		}	
+
+		//---------------------------
+		// MainCharacter Class
+		//---------------------------
+		function MainCharacter(x, y, width, height, health, speed)
+		{
+			this.x = x;
+			this.y = y;
+			this.height = height;
+			this.width = width;
+			this.health = health;
+			this.maxHealth = health;
+			this.speed = speed || 4;
+			this.fallSpeed = 6;
+			this.state = 0;
+			this.originalJumpY = 0;
+			this.sprite = new Sprite(40, 55, 1, 6, "file://C:/Users/YashSrivastava/Desktop/SideScrollFolder/commando.png");
+
+		}
+
+		MainCharacter.prototype.Update = function()
+		{
+			this.Move();
+			this.sprite.Update();
+
+			// Is Colliding with Enemy
+			for(var i=0;i<level.objects.length;i++)
+			{
+				if(level.objects[i].disabled != true)
+				{
+					if(isColliding(this, level.objects[i]))
+					{
+						if(level.objects[i].objType == 'coin')
+						{
+							level.objects[i].disabled = true;
+							level.coinCollected++;
+							console.log('coin');
+						}
+						else
+						{
+							this.health--;
+						}
+					}
+				}
+			}
+
+			if(this.health <= 0)
+			{
+				level.LoadLevel(level.currentLevel);
+			}
+		}
+
+		MainCharacter.prototype.Move = function()
+		{
+
+			if(this.state == 1) // Jumping
+			{
+				if(!level.IsColliding(this.x, this.y-6, this.x+this.width, this.y-6))
+				{
+					if(this.y - level.viewPortY  >= screenHeight/2 - level.tileWidth && level.viewPortY - this.speed > 0)
+					{
+						level.viewPortY -= 6;//this.speed;
+					}
+					
+					this.y -= 6;
+
+					if(this.y <= this.originalJumpY -(level.tileWidth*1.6))
+					{
+						this.state = 2; // Falling
+						this.originalJumpY = this.y;
+					}
+				}	
+				else
+				{
+					this.state = 2;
+				}
+			}
+
+			// Check Collision
+			else if(!level.IsColliding(this.x, this.y + this.fallSpeed + this.height, this.x+this.width, this.y+this.fallSpeed+ this.height))
+			{
+				if(this.y - level.viewPortY >= screenHeight - (level.tileWidth*2))
+				{
+					level.viewPortY += this.fallSpeed;//this.speed;
+				}
+				this.y+= this.fallSpeed;
+				
+				this.state = 2;
+			}
+			else if(this.state == 2)
+			{
+				this.state = 0;	
+			}
+
+			// Move Character			
+			if(leftArrowPressed)
+			{
+				if(!level.IsColliding(this.x - this.speed, this.y, this.x - this.speed, this.y + this.height))
+				{
+					if(this.x - level.viewPortX <= screenWidth/2 - 100)
+					{
+						if(level.viewPortX - this.speed >= 0)
+						{
+							level.viewPortX -= this.speed;
+						}
+					}
+					
+					this.x-= this.speed;
+				}
+			}
+			if(rightArrowPressed)
+			{
+				if(!level.IsColliding(this.x + this.speed + this.width, this.y, this.x + this.speed + this.width, this.y + this.height))
+				{
+					if(this.x - level.viewPortX >= screenWidth/2 + 100)
+					{
+						level.viewPortX += this.speed;
+					}
+					
+					this.x+= this.speed;
+					
+				}
+			}
+
+			if(spacePressed && this.state == 0)
+			{
+				jumpSound.play();
+				this.originalJumpY = this.y;
+				this.state = 1; // Jumping
+			}			
+		}
+
+		MainCharacter.prototype.Draw = function()
+		{
+
+			// Draw Character
+			drawRectangle(this.x - level.viewPortX, this.y - level.viewPortY, this.width, this.height, 'orange');
+
+			// Draw Health
+			drawText("Health", 20, 30);	
+			drawRectangle(20, 35, this.maxHealth*2, 20, 'white');
+			drawRectangle(20, 35, this.health*2, 20, 'green');
+
+			this.sprite.Draw(this.x - level.viewPortX, this.y- level.viewPortY);
+			
+			drawText("(" + this.x + ", " + this.y +")", 200, 200);
+
+		}
+
+
+		//---------------------------
+		// Level Class
+		//---------------------------
+		function Level(tiles)
+		{
+			this.tiles = tiles;
+			this.tileWidth = 64;
+			this.viewPortX = 0;
+			this.viewPortY = 0;
+			this.coinAvailable = 10;
+			this.coinCollected = 0;
+			this.currentLevel = 1;
+
+						
+			this.tileSet = new Sprite(64, 64, 1, 1, "tileset.png");
+
+			this.objects = new Array();
+		}	
+
+
+		Level.prototype.AddObject = function(obj)
+		{
+			this.objects.push(obj);
+		}
+
+		Level.prototype.IsColliding = function(x, y, x1, y1)
+		{
+			var xIndex = Math.floor(x/this.tileWidth);
+			var yIndex = Math.floor(y/this.tileWidth);
+
+			if(yIndex >= this.tiles.length)
+			{
+				this.LoadLevel(this.currentLevel);
+				return false;
+			}
+
+			if(this.tiles[yIndex][xIndex] > 0){
+				return true;
+			}
+
+			xIndex = Math.floor(x1/this.tileWidth);
+			yIndex = Math.floor(y1/this.tileWidth);
+
+			if(this.tiles[yIndex][xIndex] > 0){
+				return true;
+			}
+
+			return false;
+		}
+
+
+		Level.prototype.LoadLevel = function(levelNumber)
+		{
+			this.objects = new Array();
+			this.currentLevel = levelNumber;
+		
+			var houseSprite = new Sprite(106, 92, 1, 1, "house_item.png");
+			var heliSprite = new Sprite(293, 127, 1, 1, "helicopter.png");
+			var finalpageSprite = new Sprite(19000, 800, 1, 1, "finalpage.png");
+			
+			switch(levelNumber)
+			{
+				case 1: // Level One Objects
+				
+					this.tiles = level1Map;
+
+					character.x = 80;
+					character.y = 100;
+					character.health = character.maxHealth;
+					this.viewPortX = 0;
+					this.viewPortY = 0;
+					this.coinCollected = 0;
+					this.coinAvailable = 6;
+
+					this.objects = new Array();
+					
+
+					this.AddObject(new Coin(1227, 935, 20, 20));
+					this.AddObject(new Coin(2200, 776, 20, 20));
+					this.AddObject(new Coin(1217, 680, 20, 20));
+					this.AddObject(new Coin(2100, 710, 20, 20));
+					this.AddObject(new Coin(3092, 454, 20, 20));
+					this.AddObject(new Coin(400, 682, 20, 20));
+
+
+
+
+					this.AddObject(new Enemy(1277, 675, 30, 30, 6, 1));
+					this.AddObject(new Enemy(2200, 452, 30, 30, 6, 1));
+					this.AddObject(new Enemy(2264, 452, 30, 30, 6, 1));
+					this.AddObject(new Enemy(2622, 595, 30, 30, 6, 1));
+					
+
+					
+					break;
+					
+				case 2:
+					this.tiles = level2Map;
+					
+
+
+					character.x = 80;
+					character.y = 100;
+					character.health = character.maxHealth;
+					this.viewPortX = 0;
+					this.viewPortY = 0;
+					this.coinCollected = 0;
+					this.coinAvailable = 5;
+
+
+					this.objects = new Array();
+
+				        this.AddObject(new Enemy(400, 600, 30, 30, 40));
+					this.AddObject(new Enemy(776, 200, 30, 30, 40));
+					this.AddObject(new Enemy(1264, 710, 30, 30, 40));
+					this.AddObject(new Enemy(1944, 518, 30, 30, 40));
+					this.AddObject(new Enemy(2696, 644, 30, 30, 40));
+					this.AddObject(new Enemy(2264, 556, 30, 30, 40));
+					this.AddObject(new Enemy(2276, 836, 30, 30, 40));
+
+
+					this.AddObject(new BGItem(400, 64, heliSprite));
+
+					this.AddObject(new Coin(1227, 748, 20, 20));
+					this.AddObject(new Coin(1337, 748, 20, 20));
+					this.AddObject(new Coin(1777, 718, 20, 20));
+					this.AddObject(new Coin(2227, 838, 20, 20));
+					this.AddObject(new Coin(2830, 520, 20, 20));
+
+
+					
+					break;
+
+	
+				case 3:
+					this.tiles = level3Map;
+
+
+					character.x = 80;
+					character.y = 100;
+					character.health = character.maxHealth;
+					this.viewPortX = 0;
+					this.viewPortY = 0;
+					this.coinCollected = 0;
+					this.coinAvailable = 18;
+
+					this.objects = new Array();
+
+
+					this.AddObject(new Coin(128, 160, 20, 20));
+					this.AddObject(new Coin(424, 160, 20, 20));
+					this.AddObject(new Coin(752, 160, 20, 20));
+					this.AddObject(new Coin(1104, 160, 20, 20));
+					this.AddObject(new Coin(1520, 160, 20, 20));
+					this.AddObject(new Coin(424, 352, 20, 20));
+					this.AddObject(new Coin(752, 352, 20, 20));
+					this.AddObject(new Coin(1104, 352, 20, 20));
+					this.AddObject(new Coin(1520, 352, 20, 20));
+					this.AddObject(new Coin(424, 544, 20, 20));
+					this.AddObject(new Coin(752, 544, 20, 20));
+					this.AddObject(new Coin(1104, 544, 20, 20));
+					this.AddObject(new Coin(1520, 544, 20, 20));
+					this.AddObject(new Coin(424, 736, 20, 20));
+					this.AddObject(new Coin(752, 736, 20, 20));
+					this.AddObject(new Coin(1104, 736, 20, 20));
+					this.AddObject(new Coin(1520, 736, 20, 20));
+					this.AddObject(new Coin(80, 736, 20, 20));
+						
+				        this.AddObject(new Enemy(272, 160, 30, 30, 40));
+					this.AddObject(new Enemy(584, 160, 30, 30, 40));
+					this.AddObject(new Enemy(912, 160, 30, 30, 40));
+					this.AddObject(new Enemy(1292, 160, 30, 30, 40));
+					this.AddObject(new Enemy(1744, 160, 30, 30, 40));
+					this.AddObject(new Enemy(1740, 352, 30, 30, 40));
+					this.AddObject(new Enemy(1292, 352, 30, 30, 40));
+				        this.AddObject(new Enemy(910, 352, 30, 30, 40));
+					this.AddObject(new Enemy(584, 352, 30, 30, 40));
+					this.AddObject(new Enemy(272, 352, 30, 30, 40));
+					this.AddObject(new Enemy(272, 544, 30, 30, 40));
+					this.AddObject(new Enemy(584, 544, 30, 30, 40));
+					this.AddObject(new Enemy(912, 544, 30, 30, 40));
+					this.AddObject(new Enemy(1292, 544, 30, 30, 40));
+					this.AddObject(new Enemy(1740, 544, 30, 30, 40));
+					this.AddObject(new Enemy(272, 736, 30, 30, 40));
+					this.AddObject(new Enemy(584, 736, 30, 30, 40));
+					this.AddObject(new Enemy(912, 736, 30, 30, 40));
+					this.AddObject(new Enemy(1292, 736, 30, 30, 40));
+					this.AddObject(new Enemy(1740, 736, 30, 30, 40));
+					
+
+
+
+
+					
+					
+					break;
+				
+				case 4:
+					this.tiles = level4Map;
+
+
+					character.x = 80;
+					character.y = 100;
+					character.health = character.maxHealth;
+					this.viewPortX = 0;
+					this.viewPortY = 0;
+					this.coinCollected = 0;
+					this.coinAvailable = 10;
+
+
+
+					this.objects = new Array();
+
+
+					this.AddObject(new Coin(64, 644, 20, 20));
+					this.AddObject(new Coin(256, 644, 20, 20));
+					this.AddObject(new Coin(448, 644, 20, 20));
+					this.AddObject(new Coin(640, 644, 20, 20));
+					this.AddObject(new Coin(832, 644, 20, 20));
+					this.AddObject(new Coin(1024, 644, 20, 20));
+					this.AddObject(new Coin(1216, 644, 20, 20));
+					this.AddObject(new Coin(1408, 644, 20, 20));
+					this.AddObject(new Coin(1600, 644, 20, 20));
+					this.AddObject(new Coin(1792, 644, 20, 20));
+					
+
+					break;
+
+					case 5:
+					this.tiles = level5Map;
+					
+
+
+					character.x = 75;
+					character.y = 70;
+					character.health = character.maxHealth;
+					this.viewPortX = 0;
+					this.viewPortY = 0;
+					this.coinCollected = 0;
+					this.coinAvailable = 1;
+
+					this.AddObject(new BGItem(75, 70, finalpageSprite));
+				
+
+					break;
+				
+			}
+		
+		}
+
+
+		Level.prototype.Update = function()
+		{
+			for(var i=0;i<this.objects.length;i++)
+			{
+				this.objects[i].Update();
+			}
+
+			if(this.coinCollected >= this.coinAvailable)
+			{
+				this.LoadLevel(this.currentLevel+1);
+			}
+		}	
+
+
+		Level.prototype.Draw = function()
+		{
+			// Draw Map
+			for(var i=0;i<this.tiles.length;i++)
+			{
+				var tile = this.tiles[i];
+				for(var j=0;j<tile.length;j++)
+				{
+					this.tileSet.Draw(j*this.tileWidth - this.viewPortX, i*this.tileWidth - this.viewPortY, tile[j]);
+				}
+			}
+
+			// Draw Level Objects
+			for(var i=0;i<this.objects.length;i++)
+			{
+				this.objects[i].Draw();
+			}
+			
+			// Draw Coins
+			drawText(this.coinCollected + '/' + this.coinAvailable, 1000, 30);
+		}
+
+
+
+		
+		function BGItem(x, y, sprite)
+		{
+			this.x = x;
+			this.y = y;
+			this.width = 0;
+			this.height = 0;
+			this.sprite = sprite;
+		}
+		
+		BGItem.prototype.Update = function()
+		{
+			this.sprite.Update();
+		}
+		
+		BGItem.prototype.Draw = function()
+		{
+			this.sprite.Draw(this.x - level.viewPortX, this.y - level.viewPortY);
+		}
+
+		//-------------------------------------------------
+		// Sprite Class
+		//-------------------------------------------------
+		function Sprite (frameWidth, frameHeight, frameSpeed, numberOfFrames, spriteImageUri) {
+			this.frameIndex = 0;
+		   	this.frameWidth = frameWidth;
+		    this.frameHeight = frameHeight;
+		    this.frameSpeed = frameSpeed;
+		    this.spriteImageUri = spriteImageUri;
+		    this.img = new Image();
+		    this.img.src = spriteImageUri;
+		    this.numberOfFrames = numberOfFrames || 1;
+		    this.frameSpeed = 1;
+		    this.speedCounter = 0;
+		}
+ 
+		Sprite.prototype.Update = function () {
+
+	            this.speedCounter += 1;
+			if (this.speedCounter > 20) {
+
+			this.speedCounter = 0;
+				
+           	     // If the current frame index is in range
+                	if (this.frameIndex < this.numberOfFrames - 1) {	
+                    	// Go to the next frame
+                    	this.frameIndex += 1;
+                	} else {
+                    		this. frameIndex = 0;
+   	             }
+        	    }
+        	};
+
+		Sprite.prototype.Draw = function(x, y, index) {
+		
+			// Set Index if Specified
+			if(index != undefined)
+			{
+				this.frameIndex = index;
+			}
+		
+			// Draw the animation
+ 			ctx.drawImage(
+			    this.img,
+			    this.frameIndex * this.frameWidth,// / this.numberOfFrames,
+			    0,
+			    this.frameWidth,// / this.numberOfFrames,
+			    this.frameHeight,
+			    x,
+			    y,
+			    this.frameWidth, /// this.numberOfFrames, /** that.scaleRatio,*/
+				this.frameHeight /** that.scaleRatio*/);
+		};	
+
+
+		/*--------------------------------------------------
+			Helper Functions 
+		----------------------------------------------------*/
+
+		function drawText(text, x, y)
+		{
+			ctx.font = "30px Arial";
+			ctx.fillStyle = "black";
+			ctx.fillText(text,x,y);
+		}
+
+		function isColliding(obj1, obj2)
+		{
+			if(obj1.x > obj2.x + obj2.width ||
+			   obj1.x + obj1.width < obj2.x ||
+			   obj1.y > obj2.y + obj2.height ||
+			   obj1.y + obj1.height < obj2.y)
+
+			   return false;
+
+			return true;
+		}	  
+	
+
+	
+		function clearScreen()
+		{
+			ctx.clearRect(0, 0, c.width, c.height);
+		}
+
+		function drawRectangle(x, y, width, height, fillStyle)
+		{
+			ctx.fillStyle = fillStyle;
+			ctx.fillRect(x,y,width,height);
+		}
+
+
+		// Calls Game Loop 50 times a second
+		setInterval(function () { gameLoop() }, 20);
+
+		level.LoadLevel(1);
+	
+	</script>
+	</body>
+</html>

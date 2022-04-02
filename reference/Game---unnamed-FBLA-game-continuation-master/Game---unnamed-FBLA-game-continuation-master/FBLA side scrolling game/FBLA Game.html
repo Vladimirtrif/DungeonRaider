@@ -1,0 +1,1177 @@
+<!DOCTYPE html>
+
+<html>
+
+
+
+<body>
+
+    <canvas id="myCanvas" width="1500" height="800" style="border:solid 1px #000;"></canvas>
+
+    <div style="display:none;">
+
+        <img id="tileset" src="tileset.png" width="300" height="227">
+
+        <img id="death" width="200" height="200" src="Death.jpg">
+
+        <img id="0right" src="BM_Running_Right/0.png" width="300" height="200">
+
+        <img id="0left" src="BM_Running_Left/0.png" width="300" height="227">
+
+        <img id="1right" src="BM_Running_Right/1.png" width="300" height="200">
+
+        <img id="1left" src="BM_Running_Left/1.png" width="300" height="227">
+
+        <img id="2right" src="BM_Running_Right/2.png" width="300" height="200">
+
+        <img id="2left" src="BM_Running_Left/2.png" width="300" height="227">
+
+        <img id="3right" src="BM_Running_Right/3.png" width="300" height="200">
+
+        <img id="3left" src="BM_Running_Left/3.png" width="300" height="227">
+
+        <img id="4right" src="BM_Running_Right/4.png" width="300" height="200">
+
+        <img id="4left" src="BM_Running_Left/4.png" width="300" height="227">
+
+        <img id="5right" src="BM_Running_Right/5.png" width="300" height="200">
+
+        <img id="5left" src="BM_Running_Left/5.png" width="300" height="227">
+
+        <img id="6right" src="BM_Running_Right/6.png" width="300" height="200">
+
+        <img id="6left" src="BM_Running_Left/6.png" width="300" height="227">
+
+        <img id="7right" src="BM_Running_Right/7.png" width="300" height="200">
+
+        <img id="7left" src="BM_Running_Left/7.png" width="300" height="227">
+
+        <img id="8right" src="BM_Running_Right/8.png" width="300" height="200">
+
+        <img id="8left" src="BM_Running_Left/8.png" width="300" height="227">
+
+        <img id="9right" src="BM_Running_Right/9.png" width="300" height="200">
+
+        <img id="9left" src="BM_Running_Left/9.png" width="300" height="227">
+
+        <img id="10right" src="BM_Running_Right/10.png" width="300" height="200">
+
+        <img id="10left" src="BM_Running_Left/10.png" width="300" height="227">
+
+        <img id="11right" src="BM_Running_Right/11.png" width="300" height="200">
+
+        <img id="11left" src="BM_Running_Left/11.png" width="300" height="227">
+
+        <img id="12right" src="BM_Running_Right/12.png" width="300" height="200">
+
+        <img id="12left" src="BM_Running_Left/12.png" width="300" height="227">
+
+        <img id="13right" src="BM_Running_Right/13.png" width="300" height="200">
+
+        <img id="13left" src="BM_Running_Left/13.png" width="300" height="227">
+
+        <img id="reward" src="reward.png" width="300" height="200">
+        <img id="enemy" src="enemy.png" width="300" height="227">
+        <img id="L" src="L.png" width="300" height="227">
+        <img id="F" src="F.png" width="300" height="227">
+        <img id="B" src="B.png" width="300" height="227">
+        <img id="A" src="A.png" width="300" height="227">
+        <img id="endscreen" src="YOU WIN.png" width="1500" height="800" >
+
+    </div>
+
+    <a href='Main Screen.html'><button style="height:100px;width:200px">Back to Main Menu</button></a>
+
+    <script>
+
+        //get canvas
+
+        var c = document.getElementById('myCanvas');
+
+        var ctx = c.getContext("2d");
+
+        var screenWidth = 1500;
+
+        var screenHeight = 800;
+
+        //other
+
+        var z = 0;
+
+        var count = 0;
+
+        var ViewportY = 0;
+
+        var ViewportX = 0;
+
+        var health = 3;
+
+        var RewardSpawnCounter = 0;
+
+        var EnemySpawnCounter = 0;
+
+        var rewardcount = 0;
+
+        var Row;
+
+        var isNotDead = true;
+
+        var SecondCharacter = false;
+
+        function drawRectangle(x, y, width, height, fillStyle) {
+
+            ctx.fillStyle = fillStyle;
+
+            ctx.fillRect(x, y, width, height);
+
+        }
+
+        //classes
+
+        function MainCharacter(x, y, sx, sy, width, height, speed, fallspeed) {
+
+            this.RunCountR = 1;
+
+            this.RunCountL = 1;
+
+            this.runningRight = false;
+
+            this.runningLeft = false;
+
+            this.LastKeyPressed;
+
+            this.x = x;
+
+            this.y = y;
+
+            this.sx = sx;
+
+            this.sy = sy;
+
+            this.jumping = false;
+
+            this.falling = false;
+
+            this.width = width;
+
+            this.height = height;
+
+            this.speed = speed;
+
+            this.fallspeed = fallspeed;
+
+            this.originalYBeforeJumping = 0;
+
+            this.true = true;
+
+            this.RightPressed;
+
+            this.LeftPressed;
+
+            this.drawingRight = (Pieceindex) => { ctx.drawImage(document.getElementById(Pieceindex + "right"), this.x, this.y, this.width, this.height); }
+
+            this.drawingLeft = (Pieceindex) => { ctx.drawImage(document.getElementById(Pieceindex + "left"), this.x, this.y, this.width, this.height); }
+
+            this.jumpAnimation = () => {
+
+                if (this.LastKeyPressed == "left") {
+
+                    this.drawingLeft(10)
+
+                }
+
+                else {
+
+                    this.drawingRight(10);
+
+                }
+
+            }
+
+            this.fallAnimation = () => {
+
+                if (this.falling == true) {
+
+                    if (this.LastKeyPressed == "left") {
+
+                        this.drawingLeft(6);
+
+                    }
+
+                    else {
+
+                        this.drawingRight(6);
+
+                    }
+
+                }
+
+            }
+
+            this.runningAnimation = () => {
+
+                if (this.LastKeyPressed == "left") {
+
+                    this.drawingLeft(Math.floor(this.RunCountL));
+
+                }
+
+                else {
+
+                    this.drawingRight(Math.floor(this.RunCountR));
+
+                }
+
+            }
+
+            this.draw = () => {
+
+                if (this.jumping == false && this.falling == false && this.RightPressed == false && this.LeftPressed == false && this.LastKeyPressed == "left") {
+
+                    drawLevel();
+
+                    this.drawingLeft(0);
+
+                }
+
+                else {
+
+                    if (this.jumping == false && this.falling == false && this.RightPressed == false && this.LeftPressed == false) {
+
+                        drawLevel();
+
+                        this.drawingRight(0);
+
+                    }
+
+                }
+
+            }
+
+            this.respawn = () => {
+
+                this.x = this.sx
+
+                this.y = this.sy
+
+                ViewportX = 0
+
+                ViewportY = 0
+
+                drawLevel()
+
+                this.draw()
+
+            }
+
+            this.drawAfterFall = () => {
+
+                if (this.LastKeyPressed == "left") {
+
+                    this.LeftPressed = true;
+
+                    this.speed = .1;
+
+                    this.moveLeft();
+
+                    this.speed = 1;
+
+                    this.RightPressed = false;
+
+                    this.LeftPressed = false;
+
+                }
+
+                if (this.LastKeyPressed == "right") {
+
+                    this.RightPressed = true;
+
+                    this.speed = .1;
+
+                    this.moveRight();
+
+                    this.speed = 1;
+
+                    this.LeftPressed = false;
+
+                    this.RightPressed = false;
+
+                }
+
+                drawLevel();
+
+                this.fallAnimation();
+
+                Row = CurrentMap[Math.floor((this.y + ViewportY + this.height - 1) / 63)]
+
+            }
+
+            this.Fall = () => {
+
+                if (count === 0) {
+
+                    Row = CurrentMap[Math.floor((this.y + this.height) / 63)]
+
+                }
+
+                else {
+
+                    Row = CurrentMap[Math.floor((this.y + ViewportY + this.height - 1) / 63)]
+
+                }
+
+                if (Row[Math.floor((this.x + this.width + ViewportX) / 63)] === 0 && Row[Math.floor((this.x + ViewportX) / 63)] === 0) {
+
+                    this.falling = true;
+
+                    if (this.y >= 500 && ViewportY < CurrentMap.length * 63 - 800) {
+
+                        count = 1;
+
+                        ViewportY = ViewportY + 1
+
+                        this.drawAfterFall();
+
+                    }
+
+                    else {
+
+                        this.y = this.y + 1;
+
+                        this.drawAfterFall();
+
+                    }
+
+                }
+
+                else {
+
+                    this.falling = false;
+
+                }
+
+            };
+
+            this.moveRight = () => {
+
+                var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
+
+                if (count = 1) {
+
+                    SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63 - 1)];
+
+                }
+
+                else {
+
+                    SideRowbottom = CurrentMap[Math.floor((this.y + this.height - 1) / 63)];
+
+                }
+
+                console.log(SideRowbottom)
+
+                if (SideRow[Math.floor((this.x + 1 + this.width + ViewportX) / 63)] == 0 && this.RightPressed == true && SideRowbottom[Math.floor((this.x + 1 + this.width + ViewportX) / 63)] == 0) {
+
+                    if (this.x >= 750 && ViewportX / 63 <= CurrentMap[1].length - 1500 / 63) {
+
+                        var count = 1;
+
+                        ViewportX = ViewportX + this.speed;
+
+                    }
+
+                    else {
+
+                        this.x = this.x + this.speed;
+
+                    }
+
+                    drawLevel();
+
+                    if (this.runningRight == true) {
+
+                        if (Math.floor(this.RunCountR + 1 / 15) == 14) {
+
+                            this.RunCountR = 1;
+
+                            this.runningAnimation();
+
+                        }
+
+                        else {
+
+                            this.RunCountR = this.RunCountR + 1 / 15;
+
+                            this.runningAnimation();
+
+                        }
+
+                    }
+
+                    else {
+
+                        this.draw();
+
+                    }
+
+                }
+
+                else {
+
+                    this.RunCountR = 1;
+
+                    this.RightPressed = false;
+
+                    this.runningRight == false;
+
+                    this.draw();
+
+                }
+
+            };
+
+            this.runRight = () => {
+
+                if (this.falling == false && this.jumping == false) {
+
+                    this.runningRight = true;
+
+                    this.moveRight();
+
+                }
+
+                else {
+
+                    this.runningRight == false;
+
+                    this.draw();
+
+                }
+
+            };
+
+            this.moveLeft = () => {
+
+                var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
+
+                if (count = 1) {
+
+                    SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63 - 1)];
+
+                }
+
+                else {
+
+                    SideRowbottom = CurrentMap[Math.floor((this.y + this.height - 1) / 63)];
+
+                }
+
+                if (SideRow[Math.floor((this.x + ViewportX - 1) / 63)] == 0 && SideRowbottom[Math.floor((this.x + ViewportX - 1) / 63)] == 0 && this.LeftPressed == true) {
+
+                    if (this.x >= 750 && (ViewportX - 1) / 63 > 0) {
+
+                        var count = 1;
+
+                        ViewportX = ViewportX - this.speed;
+
+                    }
+
+                    else {
+
+                        count = 0;
+
+                        this.x = this.x - this.speed;
+
+                    }
+
+                    drawLevel();
+
+                    if (this.runningLeft == true) {
+
+                        if (Math.floor(this.RunCountL + 1 / 15) == 14) {
+
+                            this.RunCountL = 1;
+
+                            this.runningAnimation();
+
+                        }
+
+                        else {
+
+                            this.RunCountL = this.RunCountL + 1 / 15;
+
+                            this.runningAnimation();
+
+                        }
+
+                    }
+
+                    else {
+
+                        this.draw();
+
+                    }
+
+                }
+
+                else {
+
+                    this.RunCountL = 1;
+
+                    this.draw();
+
+                    this.LeftPressed = false;
+
+                    this.runningLeft == false;
+
+                }
+
+            };
+
+            this.runLeft = () => {
+
+                if (this.falling == false && this.jumping == false) {
+
+                    this.runningLeft = true;
+
+                    this.moveLeft();
+
+                }
+
+                else {
+
+                    this.runningLeft == false;
+
+                    this.draw();
+
+                }
+
+            };
+
+            this.checkCollision = (obj1) => {
+
+                if (obj1.x + obj1.width > this.x + ViewportX && obj1.x < this.x + this.width + ViewportX && obj1.y < this.y + this.height + ViewportY && obj1.y + obj1.height > this.y + ViewportY) {
+
+                    return true
+
+                }
+
+            }
+
+            this.checkCoinCollision = () => {
+
+                for (var i = 0; i < allRewards.length; i++) {
+
+                    if (this.checkCollision(allRewards[i]) == true) {
+
+                        allRewards.splice(i, 1)
+
+                        drawLevel();
+
+                        rewardcount = rewardcount + 1;
+
+                        this.draw();
+
+                        break;
+
+                    }
+
+
+
+                }
+
+            }
+
+
+
+            this.checkWinConditionCOllection = () => {
+
+                for (var i = 0; i < allWinConditions.length; i++) {
+
+                    if (this.checkCollision(allWinConditions[i]) == true) {
+
+                        drawLevel();
+                        allWinConditions.splice(i, 1)
+
+
+                        advanceLevelCheck();
+
+                        this.draw();
+
+                        break;
+
+                    }
+
+
+
+                }
+
+            }
+
+            //Check Enemy Collision
+
+            this.checkEnemyCollision = () => {
+
+                for (var z = 0; z < allEnemies.length; z++) {
+
+
+
+                    if (this.checkCollision(allEnemies[z]) == true) {
+
+
+
+                        health = health - 1;
+
+                        drawLevel();
+
+                        for (y = 0; y < 40; y++) {
+
+                            if (this.runningLeft == true) {
+
+                                this.x--
+
+                            }
+
+                            else {
+
+                                this.x++
+
+                        }
+
+                    drawLevel();
+
+                    this.draw();
+
+
+
+                }
+
+                break;
+
+            }
+
+        }
+
+        if (health <= 0) {
+
+            health = 3
+
+            this.respawn()
+
+            drawLevel()
+
+        }
+
+            }
+
+        };
+
+        function Enemy(x, y, width, height) {
+
+            this.x = x;
+
+            this.y = y;
+
+            this.width = width;
+
+            this.height = height;
+
+            this.draw = () => { ctx.drawImage(document.getElementById("enemy"), this.x - ViewportX, this.y - ViewportY, this.width, this.height); };
+
+        };
+
+        function Reward(x, y, width, height) {
+
+            this.x = x;
+
+            this.y = y;
+
+            this.width = width;
+
+            this.height = height;
+
+            this.draw = () => { ctx.drawImage(document.getElementById("reward"), this.x - ViewportX, this.y - ViewportY, this.width, this.height); };
+
+        }
+
+        function winCondition(x, y, width, height) {
+
+            this.x = x;
+
+            this.y = y;
+
+            this.width = width;
+
+            this.height = height;
+
+            this.drawF= () => { ctx.drawImage(document.getElementById("F"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
+            this.drawB= () => { ctx.drawImage(document.getElementById("B"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
+            this.drawL= () => { ctx.drawImage(document.getElementById("L"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
+            this.drawA= () => { ctx.drawImage(document.getElementById("A"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
+
+        }
+
+    </script>
+
+    <script type="text/javascript" src="Levels.js"></script>
+
+    <script type="text/javascript">
+
+        RewardSpawnCounter = 0;
+
+
+
+        //drawing Level
+
+        function drawLevel() {
+
+            ctx.clearRect(0, 0, c.width, c.height);
+
+            var tsetRowIndex = 0; //rowIndex
+
+            while (tsetRowIndex < CurrentMap.length) {
+
+                var tsetRow = CurrentMap[tsetRowIndex];
+
+                var tileIndex = 0;
+
+                while (tileIndex < tsetRow.length) {
+
+                    ctx.drawImage(document.getElementById("tileset"), tsetRow[tileIndex] * 63, 0, 63, 63, tileIndex * 63 - ViewportX, tsetRowIndex * 63 - ViewportY, 63, 63); //draw tile
+
+                    tileIndex = tileIndex + 1;
+
+                };
+
+                tsetRowIndex = tsetRowIndex + 1;
+
+            };
+
+            // draw rewards
+
+            RewardSpawnCounter = 0;
+
+            while (RewardSpawnCounter < allRewards.length) {
+
+                allRewards[RewardSpawnCounter].draw();
+
+                RewardSpawnCounter++;
+
+            }
+
+            //draw enemies
+
+            EnemySpawnCounter = 0;
+
+            while (EnemySpawnCounter < allEnemies.length) {
+
+                allEnemies[EnemySpawnCounter].draw();
+
+                EnemySpawnCounter++;
+
+            }
+
+            //Draw Win Conditions
+
+            if (LevelNumber == 1 && allowDraw){
+                allWinConditions[0].drawF()
+            }
+            if (LevelNumber == 2 && allowDraw){
+                allWinConditions[0].drawB()
+            }
+            if (LevelNumber == 3 && allowDraw){
+                allWinConditions[0].drawL()
+            }
+            if (LevelNumber == 4 && allowDraw){
+                allWinConditions[0].drawA()
+            }
+
+
+
+            //Show the health
+
+            ctx.font = "40px Ariel"
+
+            ctx.fillStyle = "black"
+
+            ctx.fillText("Character Health:" + "  " + health, 1100, 50)
+
+            //Show the Reward Count
+
+            ctx.font = "40px Ariel"
+
+            ctx.fillStyle = "black"
+
+            ctx.fillText("Coins Collected:" + "  " + rewardcount, 1100, 100)
+
+        };
+
+        function lastKeypressjump(player) {
+
+            if (player.LastKeyPressed == "left") {
+
+                player.LeftPressed = true;
+
+                player.speed = .8;
+
+                player.moveLeft();
+
+                player.speed = 1;
+
+            }
+
+            if (player.LastKeyPressed == "right") {
+
+                player.RightPressed = true;
+
+                player.speed = .8;
+
+                player.moveRight();
+
+                player.speed = 1;
+
+            }
+
+            drawLevel()
+
+            player.jumpAnimation();
+
+            TopRow = CurrentMap[Math.floor((player.y + ViewportY) / 63)];
+
+            BottomRow = CurrentMap[Math.floor((player.y + ViewportY + player.height) / 63)]
+
+        }
+
+        function Jump(player) {
+
+            var TopRow = CurrentMap[Math.floor((player.y + ViewportY) / 63) - 1];
+
+            var BottomRow = CurrentMap[Math.floor((player.y + ViewportY + player.height) / 63)]
+
+            JumpCount = 0;
+
+            if (BottomRow[Math.floor((player.x + ViewportX + player.width - 1) / 63)] !== 0 || BottomRow[Math.floor((player.x + 1 + ViewportX) / 63)] !== 0 && jumping == false) {
+
+                while (TopRow[Math.floor((player.x + ViewportX) / 63)] == 0 && TopRow[Math.floor((player.x + player.width + ViewportX) / 63)] == 0 && JumpCount <= 105) {
+
+                    player.speed = .3;
+
+                    player.jumping = true;
+
+                    if (this.y >= 500 && Math.floor((ViewportY - 1) / 63 > 0)) {
+
+                        function jump1() {
+
+                            ViewportY = ViewportY - 1;
+
+                            lastKeypressjump(player);
+
+                        }
+
+                        setTimeout(jump1, 1000 / 120)
+
+                    }
+
+                    else {
+
+                        function jump2() {
+
+                            player.y = player.y - 1;
+
+                            lastKeypressjump(player);
+
+                        }
+
+                        setTimeout(jump2, 1000 / 120)
+
+                    }
+
+                    JumpCount = JumpCount + 1
+
+                }
+
+                player.jumping = false;
+
+                drawLevel()
+
+                player.draw
+
+            }
+
+        };
+
+
+
+        function advanceLevelCheck() {
+
+            if (allWinConditions.length == 0) {
+
+                LevelNumber = LevelNumber + 1;
+
+                changeMap();
+
+            }
+
+        }
+
+
+
+        var Character = new MainCharacter(63, 63, 63, 63, 30, 63, 1, 180);
+
+        var CharacterTwo = new MainCharacter(63, 63, 63, 63, Character.width, Character.height, Character.speed, Character.fallspeed)
+
+        window.addEventListener('load', (event) => {
+
+            //make second character
+
+            changeMap();
+
+            drawLevel();
+
+            Character.draw();
+
+            var enoos = setInterval(Character.checkEnemyCollision, 100);
+
+            var fallLoop = setInterval(Character.Fall, 1000 / Character.fallspeed);
+
+            var cloin = setInterval(Character.checkCoinCollision, 100);
+
+            var leftism = setInterval(Character.runLeft, 1000 / 135);
+
+            var rightism = setInterval(Character.runRight, 1000 / 135);
+
+            var FBLA = setInterval(Character.checkWinConditionCOllection, 100);
+
+            var winning = setInterval(endLevelCheck, 100)
+
+            function makeSecondCharacter() {
+
+                CharacterTwo.draw();
+
+                setInterval(CharacterTwo.checkEnemyCollision, 100);
+
+                setInterval(CharacterTwo.Fall, 1000 / CharacterTwo.fallspeed);
+
+                setInterval(CharacterTwo.checkCoinCollision, 100);
+
+                setInterval(CharacterTwo.runLeft, 1000 / 270);
+
+                setInterval(CharacterTwo.runRight, 1000 / 270);
+
+            }
+
+            function endLevelCheck() {
+
+                if (LevelNumber == 5 && allWinConditions.length == 0) {
+
+                    clearInterval(enoos)
+
+                    clearInterval(fallLoop)
+
+                    clearInterval(cloin)
+
+                    clearInterval(leftism)
+
+                    clearInterval(rightism)
+
+                    clearInterval(FBLA)
+
+                    clearInterval(winning)
+
+                    ctx.clearRect(0, 0, c.width, c.height);
+
+                    ctx.drawImage(document.getElementById("endscreen"), 0, 0)
+
+                    ctx.font = "40px Arial";
+
+                    ctx.fillText("Dimes Collected:" + " " + rewardcount, 600, 400);
+
+                }
+
+            }
+
+            //Inputs
+
+            document.addEventListener('keydown', function (e) {
+
+                switch (e.keyCode) {
+
+                    case 65:
+
+                        if (Character.falling == false) {
+
+                            Character.LastKeyPressed = "left"
+
+                            if (Character.jumping == false) {
+
+                                if (isNotDead = true) {
+
+                                    Character.LeftPressed = true;
+
+
+
+                                }
+
+                            }
+
+                        }
+
+                        break;
+
+                    case 68:
+
+                        if (Character.falling == false) {
+
+                            Character.LastKeyPressed = "right";
+
+                            if (Character.jumping == false) {
+
+                                if (isNotDead) {
+
+                                    Character.RightPressed = true;
+
+                                }
+
+                            }
+
+                        }
+
+                        break;
+
+                    case 32:
+
+                        if (isNotDead) {
+
+                            Jump(Character);
+
+                            break;
+
+                        }
+
+                    case 37:
+
+                        if (CharacterTwo.falling == false && SecondCharacter == true) {
+
+                            CharacterTwo.LastKeyPressed = "left";
+
+                            if (CharacterTwo.jumping == false) {
+
+                                if (isNotDead = true) {
+
+                                    CharacterTwo.LeftPressed = true;
+
+
+
+                                }
+
+                            }
+
+                        }
+
+                        break;
+
+                    case 39:
+
+                        if (CharacterTwo.falling == false && SecondCharacter == true) {
+
+                            CharacterTwo.LastKeyPressed = "right";
+
+                            if (CharacterTwo.jumping == false) {
+
+                                CharacterTwo.RightPressed = true;
+
+                            }
+
+                        }
+
+                        break;
+
+                    case 13:
+
+                        z++;
+
+                        if (z == 1) {
+
+                            SecondCharacter = true;
+
+                            makeSecondCharacter();
+
+                        }
+
+                        break;
+
+                }
+
+
+
+            });
+
+            document.addEventListener('keyup', function (e) {
+
+                switch (e.keyCode) {
+
+                    case 65:
+
+                        Character.LeftPressed = false;
+
+                        Character.runningLeft == false;
+
+                        break;
+
+                    case 68:
+
+                        Character.RightPressed = false;
+
+                        Character.runningRight == false;
+
+                        break;
+
+                    case 32:
+
+                        Character.jumping = false;
+
+                        break;
+
+                    case 37:
+
+                        if (SecondCharacter == true) {
+
+                            CharacterTwo.LeftPressed = false;
+
+                            CharacterTwo.runningLeft == false;
+
+                        }
+
+                        break;
+
+                    case 39:
+
+                        if (SecondCharacter == true) {
+
+                            CharacterTwo.RightPressed = false;
+
+                            CharacterTwo.runningRight == false;
+
+                        }
+
+                        break;
+
+                }
+
+
+
+            });
+
+
+
+        });
+
+        c.addEventListener('click', function () { Jump(Character); }, false);
+
+    </script>
+
+</body>
+
+
+
+</html>
