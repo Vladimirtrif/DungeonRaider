@@ -76,7 +76,8 @@
         <img id="F" src="../Images/Level Win Conditions/F.png" width="300" height="227">
         <img id="B" src="../Images/Level Win Conditions/B.png" width="300" height="227">
         <img id="A" src="../Images/Level Win Conditions/A.png" width="300" height="227">
-        <img id="endscreen" src="../Images/YOU WIN.png" width="1500" height="800">
+        <img id="WinScreen" src="../Images/YOU WIN.png" width="1500" height="800">
+        <img id="LoseScreen" src="../Images/Death.jpg" width="1500" height="800">
 
     </div>
 
@@ -115,6 +116,8 @@
         var isNotDead = true;
 
         var SecondCharacter = false;
+
+        var lost = false;
 
         function drawRectangle(x, y, width, height, fillStyle) {
 
@@ -169,7 +172,7 @@
             this.checkRight = () => {
                 var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
 
-                    SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63)];
+                SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63)];
 
                 if (SideRow[Math.floor((this.x + 1 + this.width + ViewportX) / 63)] == 0 && SideRowbottom[Math.floor((this.x + 1 + this.width + ViewportX) / 63)] == 0) {
                     return true;
@@ -182,7 +185,7 @@
             this.checkLeft = () => {
                 var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
 
-                    SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63)];
+                SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63)];
 
 
                 if (SideRow[Math.floor((this.x + ViewportX - 1) / 63)] == 0 && SideRowbottom[Math.floor((this.x + ViewportX - 1) / 63)] == 0) {
@@ -204,7 +207,7 @@
  */
             this.checkBottom = () => {
 
-                    Row = CurrentMap[Math.floor((this.y + this.height + ViewportY) / 63)];
+                Row = CurrentMap[Math.floor((this.y + this.height + ViewportY) / 63)];
 
                 if (Row[Math.floor((this.x + this.width + ViewportX) / 63)] === 0 && Row[Math.floor((this.x + ViewportX) / 63)] === 0) {
                     return true;
@@ -556,7 +559,7 @@
 
             };
             this.lastKeypressjump = () => {
-                
+
                 if (this.LastKeyPressed == "left") {
 
                     this.LeftPressed = true;
@@ -569,7 +572,7 @@
 
                 }
 
-                if (this.LastKeyPressed == "right" ) {
+                if (this.LastKeyPressed == "right") {
 
                     this.RightPressed = true;
 
@@ -729,29 +732,19 @@
 
 
                         health = health - 1;
-
-                        drawLevel();
-
-                        for (y = 0; y < 40; y++) {
-
-                            if (this.LastKeyPressed == "right") {
-
-                                this.x--
-
-                            }
-
-                            else {
-
-                                this.x++
-
-                            }
+                        if (health <= 0) {
+                            lost = true;
+                        }
+                        else {
 
                             drawLevel();
 
-                            this.draw();
+                            for (y = 0; y < 40; y++) {
 
+                                this.respawn()
 
-
+                                drawLevel();
+                            }
                         }
 
                         break;
@@ -760,15 +753,7 @@
 
                 }
 
-                if (health <= 0) {
 
-                    health = 3
-
-                    this.respawn()
-
-                    drawLevel()
-
-                }
 
             }
 
@@ -893,11 +878,11 @@
             if (LevelNumber == 4 && allowDraw) {
                 allWinConditions[0].drawA()
             }
-                    if (LevelNumber == 5 && allowDraw) {
+            if (LevelNumber == 5 && allowDraw) {
                 allWinConditions[0].drawA()
             }
 
-                           
+
 
             //Show the health
 
@@ -952,6 +937,8 @@
 
             var winning = setInterval(endLevelCheck, 100)
 
+            var losing = setInterval(lostGameCheck, 100)
+
             function endLevelCheck() {
 
                 if (LevelNumber == 5 && allWinConditions.length == 0) {
@@ -970,9 +957,43 @@
 
                     clearInterval(winning)
 
+                    clearInterval(losing)
+
                     ctx.clearRect(0, 0, c.width, c.height);
 
-                    ctx.drawImage(document.getElementById("endscreen"), 0, 0)
+                    ctx.drawImage(document.getElementById("WinScreen"), 0, 0)
+
+                    ctx.font = "40px Arial";
+
+                    ctx.fillText("Dimes Collected:" + " " + rewardcount, 600, 400);
+
+                }
+
+            }
+
+            function lostGameCheck() {
+
+                if (lost === true) {
+
+                    clearInterval(enoos)
+
+                    clearInterval(fallLoop)
+
+                    clearInterval(cloin)
+
+                    clearInterval(leftism)
+
+                    clearInterval(rightism)
+
+                    clearInterval(FBLA)
+
+                    clearInterval(winning)
+
+                    clearInterval(losing)
+
+                    ctx.clearRect(0, 0, c.width, c.height);
+
+                    ctx.drawImage(document.getElementById("LoseScreen"), 0, 0)
 
                     ctx.font = "40px Arial";
 
