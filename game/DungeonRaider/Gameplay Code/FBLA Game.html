@@ -6,13 +6,13 @@
 
 <body>
 
-    <canvas id="myCanvas" width="1500" height="800" style="border:solid 1px #000;"></canvas>
+    <canvas id="myCanvas" width="1500" height="1050" style="border:solid 1px #000;"></canvas>
 
     <div style="display:none;">
 
-        <img id="tileset" src="../Images/tilesetedited.png" width="300" height="227">
+        <img id="tileset" src="../Images/tilesetedited(pixelated).png" width="1139" height="111">
 
-        <img id="death" width="200" height="200" src="../Images/Death.jpg">
+        <img id="death" width="200" height="200" src="../Images/Death.png">
 
         <img id="0right" src="../Images/Main Character/BM_Running_Right/0.png" width="300" height="200">
 
@@ -77,7 +77,7 @@
         <img id="B" src="../Images/Level Win Conditions/B.png" width="300" height="227">
         <img id="A" src="../Images/Level Win Conditions/A.png" width="300" height="227">
         <img id="WinScreen" src="../Images/YOU WIN.png" width="1500" height="800">
-        <img id="LoseScreen" src="../Images/Death.jpg" width="1500" height="800">
+        <img id="LoseScreen" src="../Images/Death.png" width="1500" height="800">
 
     </div>
 
@@ -93,10 +93,11 @@
 
         var screenWidth = 1500;
 
-        var screenHeight = 800;
+        var screenHeight = 1050;
 
         //other
-
+        var tileSize = 63;
+        
         var z = 0;
 
         var ViewportY = 0;
@@ -170,11 +171,11 @@
             this.LeftPressed;
 
             this.checkRight = () => {
-                var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
+                var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize)];
 
-                SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63)];
+                SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / tileSize)];
 
-                if (SideRow[Math.floor((this.x + 1 + this.width + ViewportX) / 63)] == 0 && SideRowbottom[Math.floor((this.x + 1 + this.width + ViewportX) / 63)] == 0) {
+                if (SideRow[Math.floor((this.x + 1 + this.width + ViewportX) / tileSize)] == 0 && SideRowbottom[Math.floor((this.x + 1 + this.width + ViewportX) / tileSize)] == 0) {
                     return true;
                 }
                 else {
@@ -183,12 +184,12 @@
             };
 
             this.checkLeft = () => {
-                var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
+                var SideRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize)];
 
-                SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / 63)];
+                SideRowbottom = CurrentMap[Math.floor((this.y + this.height + ViewportY - 1) / tileSize)];
 
 
-                if (SideRow[Math.floor((this.x + ViewportX - 1) / 63)] == 0 && SideRowbottom[Math.floor((this.x + ViewportX - 1) / 63)] == 0) {
+                if (SideRow[Math.floor((this.x + ViewportX - 1) / tileSize)] == 0 && SideRowbottom[Math.floor((this.x + ViewportX - 1) / tileSize)] == 0) {
                     return true;
                 }
                 else {
@@ -207,9 +208,9 @@
  */
             this.checkBottom = () => {
 
-                Row = CurrentMap[Math.floor((this.y + this.height + ViewportY) / 63)];
+                Row = CurrentMap[Math.floor((this.y + this.height + ViewportY) / tileSize)];
 
-                if (Row[Math.floor((this.x + this.width + ViewportX) / 63)] === 0 && Row[Math.floor((this.x + ViewportX) / 63)] === 0) {
+                if (Row[Math.floor((this.x + this.width + ViewportX) / tileSize)] === 0 && Row[Math.floor((this.x + ViewportX) / tileSize)] === 0) {
                     return true;
                 }
                 else {
@@ -351,7 +352,7 @@
 
                 this.fallAnimation();
 
-                Row = CurrentMap[Math.floor((this.y + ViewportY + this.height - 1) / 63)]
+                Row = CurrentMap[Math.floor((this.y + ViewportY + this.height - 1) / tileSize)]
 
             }
 
@@ -359,7 +360,7 @@
                 if (this.checkBottom() === true) {
                     this.falling = true;
 
-                    if (this.y >= 500 && ViewportY < CurrentMap.length * 63 - 800) {
+                    if (this.y >= screenHeight/2 && ViewportY < CurrentMap.length * tileSize - screenHeight) {
 
 
                         ViewportY = ViewportY + 1
@@ -390,7 +391,7 @@
 
                 if (this.RightPressed == true && this.checkRight() === true) {
 
-                    if (this.x >= 750 && ViewportX / 63 <= CurrentMap[1].length - 1500 / 63) {
+                    if (this.x >= screenWidth/2 && ViewportX / tileSize <= CurrentMap[1].length - screenWidth / tileSize) {
 
                         ViewportX = ViewportX + this.speed;
 
@@ -470,7 +471,7 @@
 
                 if (this.checkLeft() === true && this.LeftPressed == true) {
 
-                    if (this.x >= 750 && (ViewportX - 1) / 63 > 0) {
+                    if (this.x >= screenWidth/2 && (ViewportX - 1) / tileSize > 0) {
 
 
                         ViewportX = ViewportX - this.speed;
@@ -588,50 +589,50 @@
 
                 this.jumpAnimation();
 
-                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63)];
+                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize)];
 
-                BottomRow = CurrentMap[Math.floor((this.y + ViewportY + this.height) / 63)]
+                BottomRow = CurrentMap[Math.floor((this.y + ViewportY + this.height) / tileSize)]
 
             }
             this.jump1 = () => {
 
                 ViewportY = ViewportY - 1;
 
-                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63) - 1];
+                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
                 this.lastKeypressjump();
 
-                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63) - 1];
+                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
             }
             this.jump2 = () => {
 
                 this.y = this.y - 1;
 
-                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63) - 1];
+                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
                 this.lastKeypressjump();
 
-                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63) - 1];
+                TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
             }
             this.Jump = () => {
 
-                var TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63) - 1];
+                var TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
-                var BottomRow = CurrentMap[Math.floor((this.y + ViewportY + this.height) / 63)]
+                var BottomRow = CurrentMap[Math.floor((this.y + ViewportY + this.height) / tileSize)]
 
                 JumpCount = 0;
 
-                if (BottomRow[Math.floor((this.x + ViewportX + this.width - 1) / 63)] !== 0 || BottomRow[Math.floor((this.x + 1 + ViewportX) / 63)] !== 0 && jumping == false) {
+                if (BottomRow[Math.floor((this.x + ViewportX + this.width - 1) / tileSize)] !== 0 || BottomRow[Math.floor((this.x + 1 + ViewportX) / tileSize)] !== 0 && jumping == false) {
 
-                    while (TopRow[Math.floor((this.x + ViewportX) / 63)] == 0 && TopRow[Math.floor((this.x + this.width + ViewportX) / 63)] == 0 && JumpCount <= 105) {
+                    while (TopRow[Math.floor((this.x + ViewportX) / tileSize)] == 0 && TopRow[Math.floor((this.x + this.width + ViewportX) / tileSize)] == 0 && JumpCount <= 105) {
 
                         this.speed = .3;
 
                         this.jumping = true;
 
-                        if (this.y <= 500 && Math.floor((ViewportY - 1) / 63) > 0) {
+                        if (this.y <= 500 && Math.floor((ViewportY - 1) / tileSize) > 0) {
                             setTimeout(this.jump1, 1000 / 120)
 
                         }
@@ -643,7 +644,7 @@
                         }
 
                         JumpCount = JumpCount + 1
-                        TopRow = CurrentMap[Math.floor((this.y + ViewportY) / 63) - 1];
+                        TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
                     }
 
@@ -813,7 +814,6 @@
         RewardSpawnCounter = 0;
 
 
-
         //drawing Level
 
         function drawLevel() {
@@ -830,7 +830,7 @@
 
                 while (tileIndex < tsetRow.length) {
 
-                    ctx.drawImage(document.getElementById("tileset"), tsetRow[tileIndex] * 63, 0, 63, 63, tileIndex * 63 - ViewportX, tsetRowIndex * 63 - ViewportY, 63, 63); //draw tile
+                    ctx.drawImage(document.getElementById("tileset"), tsetRow[tileIndex] * tileSize, 0, tileSize, tileSize, tileIndex * tileSize - ViewportX, tsetRowIndex * tileSize - ViewportY, tileSize, tileSize); //draw tile
 
                     tileIndex = tileIndex + 1;
 
