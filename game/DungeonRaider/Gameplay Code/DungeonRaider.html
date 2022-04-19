@@ -120,6 +120,8 @@
 
         var lost = false;
 
+        var allScores = [];
+
         function drawRectangle(x, y, width, height, fillStyle) {
 
             ctx.fillStyle = fillStyle;
@@ -672,11 +674,11 @@
 
             this.checkCoinCollision = () => {
 
-                for (var i = 0; i < allRewards.length; i++) {
+                for (var i = 0; i < rewardsLeft.length; i++) {
 
-                    if (this.checkCollision(allRewards[i]) == true) {
+                    if (this.checkCollision(rewardsLeft[i]) == true) {
 
-                        allRewards.splice(i, 1)
+                        rewardsLeft.splice(i, 1)
 
                         drawLevel();
 
@@ -735,15 +737,17 @@
                         health = health - 1;
                         if (health <= 0) {
                             lost = true;
+
                         }
                         else {
-
+                            rewardcount = rewardcount - levelRewards.length + rewardsLeft.length;
+                            rewardsLeft = levelRewards.slice();
                             drawLevel();
 
                             for (y = 0; y < 40; y++) {
 
                                 this.respawn()
-
+                                
                                 drawLevel();
                             }
                         }
@@ -844,9 +848,9 @@
 
             RewardSpawnCounter = 0;
 
-            while (RewardSpawnCounter < allRewards.length) {
+            while (RewardSpawnCounter < rewardsLeft.length) {
 
-                allRewards[RewardSpawnCounter].draw();
+                rewardsLeft[RewardSpawnCounter].draw();
 
                 RewardSpawnCounter++;
 
@@ -888,17 +892,17 @@
 
             ctx.font = "40px Ariel"
 
-            ctx.fillStyle = "black"
+            ctx.fillStyle = "whiite"
 
-            ctx.fillText("Character Health:" + "  " + health, 1100, 50)
+            ctx.fillText("Character Health:" + "  " + health, 1150, 50)
 
             //Show the Reward Count
 
             ctx.font = "40px Ariel"
 
-            ctx.fillStyle = "black"
+            ctx.fillStyle = "white"
 
-            ctx.fillText("Coins Collected:" + "  " + rewardcount, 1100, 100)
+            ctx.fillText("Coins Collected:" + "  " + rewardcount, 1150, 100)
 
         };
 

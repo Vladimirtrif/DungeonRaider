@@ -1,9 +1,30 @@
 <html>
+
 <body>
-<h2>OBJECTIVE</h2>
-<p style="font-size:20px;">Try to Collect as Many Dimes As You Can <br>For the March of The Dimes While Progressing <br> Through the Levels of BAA</p>
-<a href='Main Screen.html'><button style="height:100px;width:200px">Back to Main Menu</button></a>
+    <canvas id="myCanvas" width="1500" height="1050" style="border:solid 1px #000;"></canvas>
+
+    <div style="display:none;">
+        <img id="Objective" src="../Images/Objective.png" width="1500" height="1050">
+    </div>
+    <script>
+        var c = document.getElementById('myCanvas');
+        var ctx = c.getContext("2d");
+        var screenWidth = 1500;
+        var screenHeight = 1050;
+        window.addEventListener('load', (event) => {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.drawImage(document.getElementById("Objective"), 0, 0)
+            document.addEventListener('keydown', function (e) {
+
+                switch (e.keyCode) {
+
+                    case 32:
+                    window.location.href = '../Gameplay Code/DungeonRaider.html';
+                    break;
+                }
+            });
+        });
+    </script>
 </body>
 
 </html>
-
