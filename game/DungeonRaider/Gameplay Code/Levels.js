@@ -32,7 +32,6 @@ var allowDraw = false;
                 CurrentEnemyTotal = 2;
                 CurrentMap = level1Map
                 allWinConditions.push(new winCondition(1300,680, 63,63))
-                //allWinConditions.push(new winCondition(63,100, 63,63))
                 levelRewards.push(new Reward(600,200,62,62))
                 levelRewards.push(new Reward(96,191, 62, 62))
                 levelRewards.push(new Reward(1286,373, 62, 62))

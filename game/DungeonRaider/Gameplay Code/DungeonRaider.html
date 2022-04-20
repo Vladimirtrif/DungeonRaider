@@ -14,68 +14,21 @@
 
         <img id="death" width="200" height="200" src="../Images/Death.png">
 
-        <img id="0right" src="../Images/Main Character/BM_Running_Right/0.png" width="300" height="200">
+        <img id="0right" src="../Images/Main Character/BM_Running_Right/0.png" width="421" height="422">
 
-        <img id="0left" src="../Images/Main Character/BM_Running_Left/0.png" width="300" height="227">
+        <img id="0left" src="../Images/Main Character/BM_Running_Left/0.png" width="421" height="422">
 
-        <img id="1right" src="../Images/Main Character/BM_Running_Right/1.png" width="300" height="200">
+        <img id="1right" src="../Images/Main Character/BM_Running_Right/1.png" width="421" height="420">
 
-        <img id="1left" src="../Images/Main Character/BM_Running_Left/1.png" width="300" height="227">
+        <img id="1left" src="../Images/Main Character/BM_Running_Left/1.png" width="421" height="420">
 
-        <img id="2right" src="../Images/Main Character/BM_Running_Right/2.png" width="300" height="200">
+        <img id="2right" src="../Images/Main Character/BM_Running_Right/2.png" width="423" height="423">
 
-        <img id="2left" src="../Images/Main Character/BM_Running_Left/2.png" width="300" height="227">
-
-        <img id="3right" src="../Images/Main Character/BM_Running_Right/3.png" width="300" height="200">
-
-        <img id="3left" src="../Images/Main Character/BM_Running_Left/3.png" width="300" height="227">
-
-        <img id="4right" src="../Images/Main Character/BM_Running_Right/4.png" width="300" height="200">
-
-        <img id="4left" src="../Images/Main Character/BM_Running_Left/4.png" width="300" height="227">
-
-        <img id="5right" src="../Images/Main Character/BM_Running_Right/5.png" width="300" height="200">
-
-        <img id="5left" src="../Images/Main Character/BM_Running_Left/5.png" width="300" height="227">
-
-        <img id="6right" src="../Images/Main Character/BM_Running_Right/6.png" width="300" height="200">
-
-        <img id="6left" src="../Images/Main Character/BM_Running_Left/6.png" width="300" height="227">
-
-        <img id="7right" src="../Images/Main Character/BM_Running_Right/7.png" width="300" height="200">
-
-        <img id="7left" src="../Images/Main Character/BM_Running_Left/7.png" width="300" height="227">
-
-        <img id="8right" src="../Images/Main Character/BM_Running_Right/8.png" width="300" height="200">
-
-        <img id="8left" src="../Images/Main Character/BM_Running_Left/8.png" width="300" height="227">
-
-        <img id="9right" src="../Images/Main Character/BM_Running_Right/9.png" width="300" height="200">
-
-        <img id="9left" src="../Images/Main Character/BM_Running_Left/9.png" width="300" height="227">
-
-        <img id="10right" src="../Images/Main Character/BM_Running_Right/10.png" width="300" height="200">
-
-        <img id="10left" src="../Images/Main Character/BM_Running_Left/10.png" width="300" height="227">
-
-        <img id="11right" src="../Images/Main Character/BM_Running_Right/11.png" width="300" height="200">
-
-        <img id="11left" src="../Images/Main Character/BM_Running_Left/11.png" width="300" height="227">
-
-        <img id="12right" src="../Images/Main Character/BM_Running_Right/12.png" width="300" height="200">
-
-        <img id="12left" src="../Images/Main Character/BM_Running_Left/12.png" width="300" height="227">
-
-        <img id="13right" src="../Images/Main Character/BM_Running_Right/13.png" width="300" height="200">
-
-        <img id="13left" src="../Images/Main Character/BM_Running_Left/13.png" width="300" height="227">
+        <img id="2left" src="../Images/Main Character/BM_Running_Left/2.png" width="423" height="423">
 
         <img id="reward" src="../Images/reward.png" width="300" height="200">
         <img id="enemy" src="../Images/enemy.png" width="300" height="227">
-        <img id="L" src="../Images/Level Win Conditions/L.png" width="300" height="227">
-        <img id="F" src="../Images/Level Win Conditions/F.png" width="300" height="227">
-        <img id="B" src="../Images/Level Win Conditions/B.png" width="300" height="227">
-        <img id="A" src="../Images/Level Win Conditions/A.png" width="300" height="227">
+        <img id="chest" src="../Images/chest.png" width="421" height="421">
         <img id="WinScreen" src="../Images/YOU WIN.png" width="1500" height="800">
         <img id="LoseScreen" src="../Images/Death.png" width="1500" height="800">
 
@@ -125,7 +78,7 @@
         var hiScore = 0;
 
         var playerNum = Math.floor(localStorage.length / 2);
-        localStorage.setItem('Player ' + playerNum + ' score', rewardcount);
+        localStorage.setItem('player ' + playerNum + ' score', rewardcount);
 
         function drawRectangle(x, y, width, height, fillStyle) {
 
@@ -233,13 +186,13 @@
 
                 if (this.LastKeyPressed == "left") {
 
-                    this.drawingLeft(10)
+                    this.drawingLeft(2);
 
                 }
 
                 else {
 
-                    this.drawingRight(10);
+                    this.drawingRight(2);
 
                 }
 
@@ -251,13 +204,13 @@
 
                     if (this.LastKeyPressed == "left") {
 
-                        this.drawingLeft(6);
+                        this.drawingLeft(2);
 
                     }
 
                     else {
 
-                        this.drawingRight(6);
+                        this.drawingRight(2);
 
                     }
 
@@ -414,7 +367,7 @@
 
                     if (this.runningRight == true) {
 
-                        if (Math.floor(this.RunCountR + 1 / 15) == 14) {
+                        if (Math.floor(this.RunCountR + 1 / 4) == 3) {
 
                             this.RunCountR = 1;
 
@@ -424,7 +377,7 @@
 
                         else {
 
-                            this.RunCountR = this.RunCountR + 1 / 15;
+                            this.RunCountR = this.RunCountR + 1 / 4;
 
                             this.runningAnimation();
 
@@ -495,7 +448,7 @@
 
                     if (this.runningLeft == true) {
 
-                        if (Math.floor(this.RunCountL + 1 / 15) == 14) {
+                        if (Math.floor(this.RunCountL + 1 / 4) == 3) {
 
                             this.RunCountL = 1;
 
@@ -505,7 +458,7 @@
 
                         else {
 
-                            this.RunCountL = this.RunCountL + 1 / 15;
+                            this.RunCountL = this.RunCountL + 1 / 4;
 
                             this.runningAnimation();
 
@@ -688,7 +641,7 @@
                         drawLevel();
 
                         rewardcount = rewardcount + 1;
-                        localStorage.setItem('Player ' + playerNum + ' score', rewardcount);
+                        localStorage.setItem('player ' + playerNum + ' score', rewardcount);
                         this.draw();
 
                         break;
@@ -746,7 +699,7 @@
                         }
                         else {
                             rewardcount = rewardcount - levelRewards.length + rewardsLeft.length;
-                            localStorage.setItem('Player ' + playerNum + ' score', rewardcount);
+                            localStorage.setItem('player ' + playerNum + ' score', rewardcount);
                             rewardsLeft = levelRewards.slice();
                             drawLevel();
 
@@ -808,10 +761,7 @@
 
             this.height = height;
 
-            this.drawF = () => { ctx.drawImage(document.getElementById("F"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
-            this.drawB = () => { ctx.drawImage(document.getElementById("B"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
-            this.drawL = () => { ctx.drawImage(document.getElementById("L"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
-            this.drawA = () => { ctx.drawImage(document.getElementById("A"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
+            this.drawChest = () => { ctx.drawImage(document.getElementById("chest"), this.x - ViewportX, this.y - ViewportY, this.width, this.height) };
 
         }
 
@@ -876,22 +826,9 @@
 
             //Draw Win Conditions
 
-            if (LevelNumber == 1 && allowDraw) {
-                allWinConditions[0].drawF()
+            if (allowDraw) {
+                allWinConditions[0].drawChest();
             }
-            if (LevelNumber == 2 && allowDraw) {
-                allWinConditions[0].drawB()
-            }
-            if (LevelNumber == 3 && allowDraw) {
-                allWinConditions[0].drawL()
-            }
-            if (LevelNumber == 4 && allowDraw) {
-                allWinConditions[0].drawA()
-            }
-            if (LevelNumber == 5 && allowDraw) {
-                allWinConditions[0].drawA()
-            }
-
 
 
             //Show the health
@@ -911,9 +848,9 @@
             ctx.fillText("Your Score:" + " " + rewardcount, 640, 50)
 
             //Show Hi Score
-            for(var i = 0; i < playerNum; i++) {
-                if (parseInt(localStorage.getItem('Player ' + i + ' score')) > hiScore) {
-                    hiScore = parseInt(localStorage.getItem('Player ' + i + ' score'));
+            for (var i = 0; i < playerNum; i++) {
+                if (parseInt(localStorage.getItem('player ' + i + ' score')) > hiScore) {
+                    hiScore = parseInt(localStorage.getItem('player ' + i + ' score'));
                 }
             }
             ctx.font = "30px Cascadia Code"
@@ -928,14 +865,14 @@
 
                 LevelNumber = LevelNumber + 1;
 
-                for(var i = 0; i <= playerNum; i++) {
-                if (parseInt(localStorage.getItem('Player ' + i + ' score')) > hiScore) {
-                    hiScore = parseInt(localStorage.getItem('Player ' + i + ' score'));
+                for (var i = 0; i <= playerNum; i++) {
+                    if (parseInt(localStorage.getItem('player ' + i + ' score')) > hiScore) {
+                        hiScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                    }
                 }
-            }
-            ctx.font = "30px Cascadia Code"
-            ctx.fillStyle = "white"
-            ctx.fillText("Hi Score:" + " " + hiScore, 40, 50)
+                ctx.font = "30px Cascadia Code"
+                ctx.fillStyle = "white"
+                ctx.fillText("Hi Score:" + " " + hiScore, 40, 50)
 
                 changeMap();
 
@@ -970,7 +907,7 @@
 
             function endLevelCheck() {
 
-                if (LevelNumber == 5 && allWinConditions.length == 0) {
+                if (LevelNumber == 1 && allWinConditions.length == 0) {
 
                     clearInterval(enoos)
 
@@ -992,12 +929,48 @@
 
                     ctx.drawImage(document.getElementById("WinScreen"), 0, 0)
 
-                    ctx.font = "40px Arial";
+                    var firstPlaceScore = parseInt(localStorage.getItem('player 0 score'));
+                    var firstPlaceUsername = localStorage.getItem('player 0');
+                    var secondPlaceScore;
+                    var secondPlaceUsername = "";
+                    var thirdPlaceScore;
+                    var thirdPlaceUsername = "";
 
-                    ctx.fillText("Dimes Collected:" + " " + rewardcount, 600, 400);
-
-
-                }
+                    for (var i = 0; i <= playerNum; i++) {
+                        if (parseInt(localStorage.getItem('player ' + i + ' score')) > firstPlaceScore) {
+                            thirdPlaceScore = secondPlaceScore;
+                            thirdPlaceUsername = secondPlaceUsername;
+                            secondPlaceScore = firstPlaceScore;
+                            secondPlaceUsername = firstPlaceUsername;
+                            firstPlaceScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                            firstPlaceUsername = localStorage.getItem('player ' + i);
+                        }
+                        else if (parseInt(localStorage.getItem('player ' + i + ' score')) > secondPlaceScore) {
+                            thirdPlaceScore = secondPlaceScore;
+                            thirdPlaceUsername = secondPlaceUsername;
+                            secondPlaceScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                            secondPlaceUsername = localStorage.getItem('player ' + i);
+                        }
+                        else if (parseInt(localStorage.getItem('player ' + i + ' score')) > thirdPlaceScore) {
+                            thirdPlaceScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                            thirdPlaceUsername = localStorage.getItem('player ' + i);
+                        }
+                    }
+                    ctx.font = "27px Cascadia Code"
+                    ctx.fillStyle = "black"
+                    ctx.textAlign = "left";
+                    ctx.fillText("1st:", 355, 710);
+                    ctx.fillText("2nd:", 355, 810);
+                    ctx.fillText("3rd:", 355, 915);
+                    ctx.textAlign = "center";
+                    ctx.fillText(firstPlaceUsername, 750, 710);
+                    ctx.fillText(secondPlaceUsername, 750, 810);
+                    ctx.fillText(thirdPlaceUsername, 750, 915);
+                    ctx.textAlign = "right";
+                    ctx.fillText(firstPlaceScore, 1055, 710);
+                    ctx.fillText(secondPlaceScore, 1055, 810);
+                    ctx.fillText(thirdPlaceScore, 1055, 915);
+               }
 
             }
 
@@ -1024,10 +997,6 @@
                     ctx.clearRect(0, 0, c.width, c.height);
 
                     ctx.drawImage(document.getElementById("LoseScreen"), 0, 0)
-
-                    ctx.font = "40px Arial";
-
-                    ctx.fillText("Dimes Collected:" + " " + rewardcount, 600, 400);
 
                 }
 
