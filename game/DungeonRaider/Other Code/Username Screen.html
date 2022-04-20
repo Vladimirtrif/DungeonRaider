@@ -1,0 +1,43 @@
+<html>
+
+<body>
+    <canvas id="myCanvas" width="1500" height="1050" style="border:solid 1px #000;"></canvas>
+
+    <div style="display:none;">
+        <img id="Username" src="../Images/UsernameScreen.png" width="1500" height="1050">
+    </div>
+    <script>
+        var c = document.getElementById('myCanvas');
+        var ctx = c.getContext("2d");
+        var screenWidth = 1500;
+        var screenHeight = 1050;
+        var username = "";
+        window.addEventListener('load', (event) => {
+            ctx.clearRect(0, 0, c.width, c.height);
+            ctx.drawImage(document.getElementById("Username"), 0, 0)
+            document.addEventListener('keydown', function (e) {
+
+                switch (e.keyCode) {
+
+                    case 32:
+                        window.localStorage.setItem('username', username);
+                        window.location.href = '../Gameplay Code/DungeonRaider.html';
+                        break;
+
+                    default:
+                        username = username + String.fromCharCode(e.keyCode);
+                        console.log(username);
+                        ctx.clearRect(0, 0, c.width, c.height);
+                        ctx.drawImage(document.getElementById("Username"), 0, 0)
+                        ctx.font = "40px Cascadia Code";
+                        ctx.fillStyle = "black";
+                        ctx.textAlign = "center";
+                        ctx.fillText(username, 743, 650);
+                        break;
+                }
+            });
+        });
+    </script>
+</body>
+
+</html>
