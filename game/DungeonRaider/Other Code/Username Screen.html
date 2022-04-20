@@ -15,18 +15,18 @@
         window.addEventListener('load', (event) => {
             ctx.clearRect(0, 0, c.width, c.height);
             ctx.drawImage(document.getElementById("Username"), 0, 0)
+            //localStorage.clear();
             document.addEventListener('keydown', function (e) {
 
                 switch (e.keyCode) {
 
                     case 32:
-                        window.localStorage.setItem('username', username);
+                        localStorage.setItem('player ' + localStorage.length/2, username)                    
                         window.location.href = '../Gameplay Code/DungeonRaider.html';
                         break;
 
                     default:
                         username = username + String.fromCharCode(e.keyCode);
-                        console.log(username);
                         ctx.clearRect(0, 0, c.width, c.height);
                         ctx.drawImage(document.getElementById("Username"), 0, 0)
                         ctx.font = "40px Cascadia Code";

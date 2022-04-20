@@ -97,7 +97,7 @@
 
         //other
         var tileSize = 63;
-        
+
         var z = 0;
 
         var ViewportY = 0;
@@ -121,6 +121,11 @@
         var lost = false;
 
         var allScores = [];
+
+        var hiScore = 0;
+
+        var playerNum = Math.floor(localStorage.length / 2);
+        localStorage.setItem('Player ' + playerNum + ' score', rewardcount);
 
         function drawRectangle(x, y, width, height, fillStyle) {
 
@@ -362,7 +367,7 @@
                 if (this.checkBottom() === true) {
                     this.falling = true;
 
-                    if (this.y >= screenHeight/2 && ViewportY < CurrentMap.length * tileSize - screenHeight) {
+                    if (this.y >= screenHeight / 2 && ViewportY < CurrentMap.length * tileSize - screenHeight) {
 
 
                         ViewportY = ViewportY + 1
@@ -393,7 +398,7 @@
 
                 if (this.RightPressed == true && this.checkRight() === true) {
 
-                    if (this.x >= screenWidth/2 && ViewportX / tileSize <= CurrentMap[1].length - screenWidth / tileSize) {
+                    if (this.x >= screenWidth / 2 && ViewportX / tileSize <= CurrentMap[1].length - screenWidth / tileSize) {
 
                         ViewportX = ViewportX + this.speed;
 
@@ -473,7 +478,7 @@
 
                 if (this.checkLeft() === true && this.LeftPressed == true) {
 
-                    if (this.x >= screenWidth/2 && (ViewportX - 1) / tileSize > 0) {
+                    if (this.x >= screenWidth / 2 && (ViewportX - 1) / tileSize > 0) {
 
 
                         ViewportX = ViewportX - this.speed;
@@ -683,7 +688,7 @@
                         drawLevel();
 
                         rewardcount = rewardcount + 1;
-
+                        localStorage.setItem('Player ' + playerNum + ' score', rewardcount);
                         this.draw();
 
                         break;
@@ -741,13 +746,14 @@
                         }
                         else {
                             rewardcount = rewardcount - levelRewards.length + rewardsLeft.length;
+                            localStorage.setItem('Player ' + playerNum + ' score', rewardcount);
                             rewardsLeft = levelRewards.slice();
                             drawLevel();
 
                             for (y = 0; y < 40; y++) {
 
                                 this.respawn()
-                                
+
                                 drawLevel();
                             }
                         }
@@ -890,19 +896,29 @@
 
             //Show the health
 
-            ctx.font = "40px Ariel"
-
-            ctx.fillStyle = "whiite"
-
-            ctx.fillText("Character Health:" + "  " + health, 1150, 50)
-
-            //Show the Reward Count
-
-            ctx.font = "40px Ariel"
+            ctx.font = "30px Cascadia Code"
 
             ctx.fillStyle = "white"
 
-            ctx.fillText("Coins Collected:" + "  " + rewardcount, 1150, 100)
+            ctx.fillText("Character Health:" + " " + health, 1150, 50)
+
+            //Show the Reward Count
+
+            ctx.font = "30px Cascadia Code"
+
+            ctx.fillStyle = "white"
+
+            ctx.fillText("Your Score:" + " " + rewardcount, 640, 50)
+
+            //Show Hi Score
+            for(var i = 0; i < playerNum; i++) {
+                if (parseInt(localStorage.getItem('Player ' + i + ' score')) > hiScore) {
+                    hiScore = parseInt(localStorage.getItem('Player ' + i + ' score'));
+                }
+            }
+            ctx.font = "30px Cascadia Code"
+            ctx.fillStyle = "white"
+            ctx.fillText("Hi Score:" + " " + hiScore, 40, 50)
 
         };
 
@@ -911,6 +927,15 @@
             if (allWinConditions.length == 0) {
 
                 LevelNumber = LevelNumber + 1;
+
+                for(var i = 0; i <= playerNum; i++) {
+                if (parseInt(localStorage.getItem('Player ' + i + ' score')) > hiScore) {
+                    hiScore = parseInt(localStorage.getItem('Player ' + i + ' score'));
+                }
+            }
+            ctx.font = "30px Cascadia Code"
+            ctx.fillStyle = "white"
+            ctx.fillText("Hi Score:" + " " + hiScore, 40, 50)
 
                 changeMap();
 
@@ -970,7 +995,7 @@
                     ctx.font = "40px Arial";
 
                     ctx.fillText("Dimes Collected:" + " " + rewardcount, 600, 400);
-                    
+
 
                 }
 
