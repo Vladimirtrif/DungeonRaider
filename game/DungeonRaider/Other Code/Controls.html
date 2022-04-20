@@ -1,21 +1,10 @@
 <html>
 
 <body>
-    <canvas id="myCanvas" width="1500" height="1050" style="border:solid 1px #000;"></canvas>
 
-    <div style="display:none;">
-        <img id="Controls" src="../Images/Controls.png" width="1500" height="1050">
-    </div>
-    <script>
-        var c = document.getElementById('myCanvas');
-        var ctx = c.getContext("2d");
-        var screenWidth = 1500;
-        var screenHeight = 1050;
-        window.addEventListener('load', (event) => {
-            ctx.clearRect(0, 0, c.width, c.height);
-            ctx.drawImage(document.getElementById("Controls"), 0, 0)
-        });
-    </script>
+    <img id="Controls" src="../Images/Controls.png" width="1500" height="1050" usemap="#Controls">
+    <map name= "Controls">
+    <area shape='rect' coords="814,917,1072,1003" href= "Main Screen.html">
 </body>
 
 </html>
