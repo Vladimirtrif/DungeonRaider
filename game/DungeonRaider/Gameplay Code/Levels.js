@@ -37,8 +37,8 @@ var allowDraw = false;
                 levelRewards.push(new Reward(1286,373, 62, 62))
                 levelRewards.push(new Reward(300,700, 62, 62))
                 levelRewards.push(new Reward(443,373, 62, 62))
-                allEnemies.push(new Enemy(800,230,20, 20));
-                allEnemies.push(new Enemy(1006,740,20, 20));
+                allEnemies.push(new Enemy(800,230,40, 40));
+                allEnemies.push(new Enemy(1006,740,30, 30));
                 rewardsLeft = levelRewards.slice();
                 allowDraw = true;
                 Character.respawn()
@@ -77,9 +77,9 @@ var allowDraw = false;
                 levelRewards.push(new Reward(0500, 800, 63, 63))
                 levelRewards.push(new Reward(770, 200, 63, 63))
                 levelRewards.push(new Reward(770, 700, 63, 63))
-                allEnemies.push(new Enemy(6050,930, 20, 20));
-                allEnemies.push(new Enemy(900,300, 20, 20));
-                allEnemies.push(new Enemy(1200,930, 20, 20));
+                allEnemies.push(new Enemy(6050,930, 40, 40));
+                allEnemies.push(new Enemy(900,300, 40, 40));
+                allEnemies.push(new Enemy(1200,930, 40, 40));
                 rewardsLeft = levelRewards.slice();
                 allowDraw = true
                 Character.respawn()
