@@ -2,7 +2,7 @@ var levelRewards = [];
 var rewardsLeft = [];
 var allEnemies = [];
 var allWinConditions = [];
-var LevelNumber = 5;
+var LevelNumber = 1;
 var CurrentMap;
 var CurrentEnemyTotal;
 var allowDraw = false;

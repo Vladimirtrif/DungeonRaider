@@ -1003,6 +1003,48 @@
                     ctx.clearRect(0, 0, c.width, c.height);
 
                     ctx.drawImage(document.getElementById("LoseScreen"), 0, 0)
+                    var firstPlaceScore = parseInt(localStorage.getItem('player 0 score'));
+                    var firstPlaceUsername = localStorage.getItem('player 0');
+                    var secondPlaceScore;
+                    var secondPlaceUsername = "";
+                    var thirdPlaceScore;
+                    var thirdPlaceUsername = "";
+
+                    for (var i = 0; i <= playerNum; i++) {
+                        if (parseInt(localStorage.getItem('player ' + i + ' score')) > firstPlaceScore) {
+                            thirdPlaceScore = secondPlaceScore;
+                            thirdPlaceUsername = secondPlaceUsername;
+                            secondPlaceScore = firstPlaceScore;
+                            secondPlaceUsername = firstPlaceUsername;
+                            firstPlaceScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                            firstPlaceUsername = localStorage.getItem('player ' + i);
+                        }
+                        else if (parseInt(localStorage.getItem('player ' + i + ' score')) > secondPlaceScore) {
+                            thirdPlaceScore = secondPlaceScore;
+                            thirdPlaceUsername = secondPlaceUsername;
+                            secondPlaceScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                            secondPlaceUsername = localStorage.getItem('player ' + i);
+                        }
+                        else if (parseInt(localStorage.getItem('player ' + i + ' score')) > thirdPlaceScore) {
+                            thirdPlaceScore = parseInt(localStorage.getItem('player ' + i + ' score'));
+                            thirdPlaceUsername = localStorage.getItem('player ' + i);
+                        }
+                    }
+                    ctx.font = "27px Cascadia Code"
+                    ctx.fillStyle = "black"
+                    ctx.textAlign = "left";
+                    ctx.fillText("1st:", 395, 760);
+                    ctx.fillText("2nd:", 395, 865);
+                    ctx.fillText("3rd:", 395, 970);
+                    ctx.textAlign = "center";
+                    ctx.fillText(firstPlaceUsername, 750, 760);
+                    ctx.fillText(secondPlaceUsername, 750, 865);
+                    ctx.fillText(thirdPlaceUsername, 750, 970);
+                    ctx.textAlign = "right";
+                    ctx.fillText(firstPlaceScore, 1080, 760);
+                    ctx.fillText(secondPlaceScore, 1080, 865);
+                    ctx.fillText(thirdPlaceScore, 1080, 970);
+
 
                 }
 
