@@ -26,7 +26,7 @@
 
         <img id="2left" src="../Images/Main Character/BM_Running_Left/2.png" width="423" height="423">
 
-        <img id="reward" src="../Images/reward.png" width="300" height="200">
+        <img id="reward" src="../Images/reward.png" width="207" height="217">
         <img id="enemy" src="../Images/enemy.png" width="300" height="227">
         <img id="chest" src="../Images/chest.png" width="421" height="421">
         <img id="WinScreen" src="../Images/YOU WIN.png" width="1500" height="800">
@@ -187,12 +187,14 @@
                 if (this.LastKeyPressed == "left") {
 
                     this.drawingLeft(2);
+                    this.checkCoinCollision();
 
                 }
 
                 else {
 
                     this.drawingRight(2);
+                    this.checkCoinCollision();
 
                 }
 
@@ -435,12 +437,14 @@
 
 
                         ViewportX = ViewportX - this.speed;
+                        this.checkCoinCollision();
 
                     }
 
                     else {
 
                         this.x = this.x - this.speed;
+                        this.checkCoinCollision();
 
                     }
 
@@ -603,6 +607,7 @@
 
                         }
 
+                        this.checkCoinCollision();
                         JumpCount = JumpCount + 1
                         TopRow = CurrentMap[Math.floor((this.y + ViewportY) / tileSize) - 1];
 
@@ -613,6 +618,7 @@
                     drawLevel()
 
                     this.draw
+                    this.checkCoinCollision();
 
                 }
 

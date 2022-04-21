@@ -31,14 +31,14 @@ var allowDraw = false;
             ];
                 CurrentEnemyTotal = 2;
                 CurrentMap = level1Map
-                allWinConditions.push(new winCondition(1300,680, 63,63))
-                levelRewards.push(new Reward(600,200,62,62))
-                levelRewards.push(new Reward(96,191, 62, 62))
-                levelRewards.push(new Reward(1286,373, 62, 62))
-                levelRewards.push(new Reward(300,700, 62, 62))
-                levelRewards.push(new Reward(443,373, 62, 62))
-                allEnemies.push(new Enemy(800,230,40, 40));
-                allEnemies.push(new Enemy(1006,740,30, 30));
+                allWinConditions.push(new winCondition(100,950, 63,63))
+                levelRewards.push(new Reward(600,200,40,40))
+                levelRewards.push(new Reward(96,191, 40, 40))
+                levelRewards.push(new Reward(1286,373, 40, 40))
+                levelRewards.push(new Reward(300,700, 40, 40))
+                levelRewards.push(new Reward(443,373, 40, 40))
+                allEnemies.push(new Enemy(800,225,25, 25));
+                allEnemies.push(new Enemy(1006,725,30, 30));
                 rewardsLeft = levelRewards.slice();
                 allowDraw = true;
                 Character.respawn()
